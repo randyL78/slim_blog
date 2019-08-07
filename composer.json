@@ -1,7 +1,12 @@
 {
     "name": "slim/slim-skeleton",
     "description": "A Slim Framework skeleton application for rapid development",
-    "keywords": ["microframework", "rest", "router", "psr7"],
+    "keywords": [
+        "microframework",
+        "rest",
+        "router",
+        "psr7"
+    ],
     "homepage": "http://github.com/slimphp/Slim-Skeleton",
     "license": "MIT",
     "authors": [
@@ -13,6 +18,7 @@
     ],
     "require": {
         "php": ">=5.6",
+        "cocur/slugify": "^3.2",
         "monolog/monolog": "^1.17",
         "slim/csrf": "^0.8.3",
         "slim/php-view": "^2.0",

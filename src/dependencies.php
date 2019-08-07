@@ -28,4 +28,16 @@ return function (App $app) {
         $logger->pushHandler(new \Monolog\Handler\StreamHandler($settings['path'], $settings['level']));
         return $logger;
     };
+
+    // database connection
+    $container['db'] = function ($c) {
+        $settings = $c->get('settings')['db'];
+        $pdo = new PDO($settings['driver'] . ':' . $settings['path']);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, $settings['errorMode']);
+        $pdo->setAttribute(
+            PDO::ATTR_DEFAULT_FETCH_MODE,
+            $settings['fetchMode']
+        );
+        return $pdo;
+    };
 };

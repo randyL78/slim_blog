@@ -29,5 +29,9 @@ $middleware($app);
 $routes = require __DIR__ . '/../src/routes.php';
 $routes($app);
 
+// Register database functions
+// require __DIR__ . '/../data/Database.php';
+// $app->add(new Database);
+
 // Run app
 $app->run();
