@@ -19,3 +19,15 @@ SELECT * FROM posts;
 
 --Select all comments
 SELECT * FROM comments;
+
+--Select a specific post
+SELECT * FROM posts WHERE slug = 'the-best-day-ive-ever-had';
+
+-- Update post body
+-- UPDATE posts
+-- SET body = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc ut  honcus felis, vel tincidunt neque. Vestibulum ut metus eleifend, malesuada nisl at, scelerisque sapien. Vivamus pharetra massa libero, sed feugiat turpis efficitur at.
+
+-- Cras egestas ac ipsum in posuere. Fusce suscipit, libero id malesuada placerat, orci velit semper metus, quis pulvinar sem nunc vel augue. In ornare tempor metus, sit amet congue justo porta et. Etiam pretium, sapien non fermentum consequat, gravida lacus, non accumsan lorem odio id risus. Vestibulum pharetra tempor molestie.
+
+-- Integer sollicitudin ante ipsum, a luctus nisi egestas eu. Cras accumsan cursus ante, non dapibus tempor.'
+-- WHERE id = 1;

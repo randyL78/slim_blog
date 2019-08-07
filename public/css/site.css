@@ -10,6 +10,11 @@ body {
 	font-family: 'Noto Serif', Georgia, serif;
 	background: #444;
 }
+
+a {
+	text-decoration: none;
+}
+
 .container {
 	margin: 0 auto;
 	padding: 0 25px;

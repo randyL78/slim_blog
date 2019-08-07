@@ -18,7 +18,7 @@ return function (App $app) {
         $container->get('logger')->info("Slim-Skeleton '/' route");
 
         // get all posts
-        $args['posts'] = Database::getStaticPosts($container->get('db'));
+        $args['posts'] = Database::getPosts($container->get('db'));
 
         // Render the home page
         return $container->get('view')->render($response, 'home.twig', $args);
@@ -37,9 +37,15 @@ return function (App $app) {
     });
 
     // blog details route
-    $app->get('/blogs/{id}', function (Request $request, Response $response, array $args) use ($container) {
+    $app->get('/blogs/{slug}', function (Request $request, Response $response, array $args) use ($container) {
         // Log message
         $container->get('logger')->info("Slim-Skeleton '/blogs/id' route");
+
+        // get a specific post
+        $args['post'] = Database::getPost($container->get('db'), $args['slug']);
+
+        var_dump($args['post']);
+
 
         // render new blog post form
         return $container->get('view')->render($response, 'detail.twig', $args);

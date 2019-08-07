@@ -9,14 +9,14 @@ From the command line, if you have composer installed globally run the command `
 ## Instructions
 
 - [ ] Use the supplied mockup files to build a personal blog.
-- [ ] Use composer to install Slim and its dependencies and create the directory and package structure of the application. Save all static assets into the proper directory.
-- [ ] Create a PDO for data storage to access your databaset.
+- [X] Use composer to install Slim and its dependencies and create the directory and package structure of the application. Save all static assets into the proper directory.
+- [X] Create a PDO for data storage to access your databaset.
 - [ ] Create model classes for blog entries and blog comments.
 - [ ] Add necessary routes
-- [ ] Create index view as the homepage. This view contains a list of blog entries, which displays Title, Date/Time Created. Title should be hyperlinked to the detail page for each blog entry. Include a link to add an entry.
+- [X] Create index view as the homepage. This view contains a list of blog entries, which displays Title, Date/Time Created. Title should be hyperlinked to the detail page for each blog entry. Include a link to add an entry.
 - [ ] Create detail page displaying blog entry and submitted comments. Detail page should also display a comment form with Name and Comment. Include a link to edit the entry.
 - [ ] Create add/edit page for blog posts.
-- [ ] Use CSS to style headings, font colors, blog entry container colors, body colors.
+- [X] Use CSS to style headings, font colors, blog entry container colors, body colors.
 
 ## Extra Credit
 
