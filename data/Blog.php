@@ -8,6 +8,7 @@
  ** been chose.
  * @author Randy Layne
  */
+
 class Blog
 {
 
@@ -36,8 +37,7 @@ class Blog
         $this->title = $title;
 
         if (empty($slug)) {
-            $slugify = new Slugify();
-            $this->slug = $slugify->slugify($title);
+            $this->slug = $this->slugThis($title);
         } else {
             $this->slug = $slug;
         }
@@ -147,5 +147,44 @@ class Blog
             echo $ex;
             return false;
         }
+    }
+
+    /**
+     * Save a blog post to the database
+     * @param PDO $db an object representing the database connection
+     * @param Blog $blog the blog post to save
+     * @return bool if the post successfully saved
+     */
+    public static function saveBlogPost(PDO $db, Blog $blog)
+    {
+        $sql = 'INSERT INTO posts (title, date, body, slug)'
+            .  'VALUES (?, ?, ?, ?)';
+
+        try {
+            $results = $db->prepare($sql);
+            $results->bindValue(1, $blog->getTitle(), PDO::PARAM_STR);
+            $results->bindValue(2, $blog->getDate(), PDO::PARAM_STR);
+            $results->bindValue(3, $blog->getBody(), PDO::PARAM_STR);
+            $results->bindValue(4, $blog->getSlug(), PDO::PARAM_STR);
+            $results->execute();
+            return true;
+        } catch (Exception $ex) {
+            echo $ex;
+            return false;
+        }
+    }
+
+    /**
+     * Turn a string into a slug
+     * @param string $str string to turn into slug
+     * @return string the slug
+     */
+    public static function slugThis($str)
+    {
+        return strtolower(trim(preg_replace(
+            '/[^A-Za-z0-9-]+/',
+            '-',
+            $str
+        ), '-'));
     }
 }

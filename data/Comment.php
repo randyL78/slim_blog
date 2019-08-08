@@ -111,7 +111,7 @@ class Comment
                 $comment['id'],
                 $comment['name'],
                 $comment['body'],
-                $comment['project_id'],
+                $comment['post_id'],
                 $comment['date']
             );
         }

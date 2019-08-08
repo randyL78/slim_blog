@@ -5,6 +5,11 @@ use Slim\App;
 return function (App $app) {
     $container = $app->getContainer();
 
+    // enable tokens to protect against cross site scripts 
+    $container['csrf'] = function ($c) {
+        return new \Slim\Csrf\Guard;
+    };
+
     // Register twig view component on container
     $container['view'] = function ($c) {
         $settings = $c->get('settings')['view'];
