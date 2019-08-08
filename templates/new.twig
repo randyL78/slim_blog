@@ -3,11 +3,11 @@
 {% block content %}
 <div class="new-entry">
   <h2>{{ title }}</h2>
-  <form>
+  <form method="post" action="/blogs/new">
     <label for="title"> Title</label>
-    <input type="text" name="title"><br>
+    <input type="text" value="{{ post.title }}" name="title"><br>
     <label for="entry">Entry</label>
-    <textarea rows="5" name="entry"></textarea>
+    <textarea rows="5" value="{{ post.body }}" name="entry"></textarea>
     <input type="submit" value="Publish Entry" class="button">
     <a href="#" class="button button-secondary">Cancel</a>
   </form>

@@ -10,7 +10,7 @@
           {% for paragraph in body %}
           <p>{{ paragraph }}</p>
           {% endfor %}
-          <p><a class="link" href="/blogs/1/edit">Edit Entry</a></p>
+          <p><a class="link" href="/blogs/{{ post.slug }}/edit">Edit Entry</a></p>
         </div>
       </article>
     </div>
@@ -19,19 +19,20 @@
 <section class="entry-comments">
   <div class="container">
     <h2>Comments</h2>
+    {% for comment in comments %}
     <div class="comment">
-      <strong>Carling Kirk</strong>
-      <time datetime="2016-01-31 1:00">January 31, 2016 at 1:00</time>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc ut rhoncus felis, vel tincidunt neque.
-          Vestibulum ut metus eleifend, malesuada nisl at, scelerisque sapien. Vivamus pharetra massa libero,
-          sed feugiat turpis efficitur at.</p>
+      <strong>{{ comment.name }}</strong>
+       <time datetime="{{ comment.date }}">{{ comment.date |date("F j, Y \\a\\t g:i") }} </time>
+      <p>{{ comment.body }}</p>
     </div>
+    {% endfor %}
     <div class="new-comment">
       <form>
         <label for="name"> Name</label>
-        <input type="text" name="name"><br>
+        <input type="text" name="name" id="name"><br>
         <label for="comment">Comment</label>
-        <textarea rows="5" name="comment"></textarea>
+        <textarea rows="5" name="comment" id="comment"></textarea>
+        <input type="hidden" name="post" value="{{ post.id }}" />
         <input type="submit" value="Post Comment" class="button">
       </form>
     </div>

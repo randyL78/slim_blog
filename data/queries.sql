@@ -14,6 +14,11 @@
 --               Integer sollicitudin ante ipsum, a luctus nisi egestas eu. Cras accumsan cursus ante, non
 --               dapibus tempor.",  "the-best-day-ive-ever-had");
 
+-- create a comment
+INSERT INTO comments 
+(name, body, post_id, date)
+VALUES ("Carling Kirk", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc ut rhoncus felis, vel tincidunt neque. Vestibulum ut metus eleifend, malesuada nisl at, scelerisque sapien. Vivamus pharetra massa libero, sed feugiat turpis efficitur at.", 1, CURRENT_TIMESTAMP);
+
 -- Select all blog posts
 SELECT * FROM posts;
 
@@ -31,3 +36,7 @@ SELECT * FROM posts WHERE slug = 'the-best-day-ive-ever-had';
 
 -- Integer sollicitudin ante ipsum, a luctus nisi egestas eu. Cras accumsan cursus ante, non dapibus tempor.'
 -- WHERE id = 1;
+
+
+
+

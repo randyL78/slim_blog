@@ -10,3 +10,6 @@ composer.phar
 
 # The project starter files
 /starter_files/
+
+# VSCode workspace settings
+.vscode
