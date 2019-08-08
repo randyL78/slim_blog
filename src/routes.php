@@ -49,15 +49,15 @@ return function (App $app) {
 
         $args = array_merge($request->getParsedBody());
 
-
+        $blog = new Blog(
+            $args['post_title'],
+            null,
+            $args['body']
+        );
 
         if (!empty($args['post_title']) && !empty($args['body'])) {
 
-            Blog::saveBlogPost($this->db, new Blog(
-                $args['post_title'],
-                null,
-                $args['body']
-            ));
+            Blog::saveBlogPost($this->db, $blog);
 
             $url = $this->router->pathFor('home');
             return $response->withStatus(302)->withHeader('Location', $url);
@@ -65,6 +65,8 @@ return function (App $app) {
 
         $args['error'] = 'All fields are required';
         $args['title'] = 'Publish New Entry';
+        $args['post'] = $blog;
+        $args['action'] = "/blogs/new";
 
         // CSRF token name and value
         $nameKey = $this->csrf->getTokenNameKey();
@@ -81,7 +83,7 @@ return function (App $app) {
     // blog details route
     $app->get('/blogs/{slug}', function (Request $request, Response $response, array $args) use ($container) {
         // Log message
-        $container->get('logger')->info("Slim-Skeleton '/blogs/id' route");
+        $container->get('logger')->info("Slim-Skeleton '/blogs/slug' route");
 
         // get a specific post
         $args['post'] = Blog::getBlogPost($this->db, $args['slug']);
@@ -98,11 +100,67 @@ return function (App $app) {
 
 
     // edit blog route
-    $app->get('/blogs/{id}/edit', function (Request $request, Response $response, array $args) use ($container) {
+    $app->get('/blogs/{slug}/edit', function (Request $request, Response $response, array $args) use ($container) {
         // Log message
-        $container->get('logger')->info("Slim-Skeleton '/blogs/id/edit' route");
+        $container->get('logger')->info("Slim-Skeleton '/blogsslug/edit' route");
 
         $args['title'] = 'Edit Entry';
+
+        // CSRF token name and value
+        $nameKey = $this->csrf->getTokenNameKey();
+        $valueKey = $this->csrf->getTokenValueKey();
+        $args['csrf'] = [
+            $nameKey => $request->getAttribute($nameKey),
+            $valueKey => $request->getAttribute($valueKey)
+        ];
+
+        // get a specific post
+        $args['post'] = Blog::getBlogPost($this->db, $args['slug']);
+
+        // render new blog post form
+        return $container->get('view')->render($response, 'new.twig', $args);
+    });
+
+    // update blog route
+    $app->post('/blogs/{slug}/edit', function (Request $request, Response $response, array $args) use ($container) {
+
+        $slug = $args['slug'];
+        $args = array_merge($request->getParsedBody());
+
+        $blog = new Blog(
+            $args['post_title'],
+            null,
+            $args['body']
+        );
+
+        if (!empty($args['post_title']) && !empty($args['body'])) {
+
+            Blog::saveBlogPost($this->db, $blog, $slug);
+
+            $url = $this->router->pathFor('home');
+            return $response->withStatus(302)->withHeader('Location', $url);
+        }
+
+        $args['error'] = 'All fields are required';
+        $args['title'] = 'Edit Entry';
+        $args['post'] = $blog;
+
+        // Log message
+        $container->get('logger')->info("Slim-Skeleton '/blogsslug/edit' route");
+
+
+
+        // CSRF token name and value
+        $nameKey = $this->csrf->getTokenNameKey();
+        $valueKey = $this->csrf->getTokenValueKey();
+        $args['csrf'] = [
+            $nameKey => $request->getAttribute($nameKey),
+            $valueKey => $request->getAttribute($valueKey)
+        ];
+        $args['action'] = "/blogs/$blog->getSlug()/edit";
+
+        // get a specific post
+        $args['post'] = Blog::getBlogPost($this->db, $args['slug']);
 
         // render new blog post form
         return $container->get('view')->render($response, 'new.twig', $args);

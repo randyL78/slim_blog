@@ -15,7 +15,7 @@ From the command line, if you have composer installed globally run the command `
 - [ ] Add necessary routes
 - [X] Create index view as the homepage. This view contains a list of blog entries, which displays Title, Date/Time Created. Title should be hyperlinked to the detail page for each blog entry. Include a link to add an entry.
 - [X] Create detail page displaying blog entry and submitted comments. Detail page should also display a comment form with Name and Comment. Include a link to edit the entry.
-- [ ] Create add/edit page for blog posts.
+- [X] Create add/edit page for blog posts.
 - [X] Use CSS to style headings, font colors, blog entry container colors, body colors.
 
 ## Extra Credit

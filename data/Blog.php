@@ -150,26 +150,38 @@ class Blog
     }
 
     /**
-     * Save a blog post to the database
+     * Save or update a blog post to the database
      * @param PDO $db an object representing the database connection
      * @param Blog $blog the blog post to save
      * @return bool if the post successfully saved
      */
-    public static function saveBlogPost(PDO $db, Blog $blog)
+    public static function saveBlogPost(PDO $db, Blog $blog, $old_slug = null)
     {
         $sql = 'INSERT INTO posts (title, date, body, slug)'
             .  'VALUES (?, ?, ?, ?)';
 
+        if (!empty($old_slug)) {
+            $sql = 'UPDATE posts set title=?, date=?, body=?, slug=?'
+                .  'WHERE slug=?';
+        }
+
         try {
+
+
             $results = $db->prepare($sql);
             $results->bindValue(1, $blog->getTitle(), PDO::PARAM_STR);
             $results->bindValue(2, $blog->getDate(), PDO::PARAM_STR);
             $results->bindValue(3, $blog->getBody(), PDO::PARAM_STR);
             $results->bindValue(4, $blog->getSlug(), PDO::PARAM_STR);
+
+            if (!empty($old_slug)) {
+                $results->bindValue(5, $old_slug, PDO::PARAM_STR);
+            }
             $results->execute();
             return true;
         } catch (Exception $ex) {
             echo $ex;
+            exit;
             return false;
         }
     }
