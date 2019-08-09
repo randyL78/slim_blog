@@ -1,39 +1,46 @@
 {% extends 'base.twig' %}
 
 {% block content %}
-    <div class="entry-list single">
-      <article>
-        <h1>{{ post.title }}</h1>
-         <time datetime="{{post.date}}">{{ post.date |date("F j, Y \\a\\t g:i") }} </time>
-        <div class="entry">
-          {% set body = post.body|split("\n") %}
-          {% for paragraph in body %}
-          <p>{{ paragraph }}</p>
-          {% endfor %}
-          <p><a class="link" href="/blogs/{{ post.slug }}/edit">Edit Entry</a></p>
+        <div class="entry-list single">
+            <article>
+                <h1>{{ post.title }}</h1>
+                <time datetime="{{post.date}}">
+                {{ post.date |date("F j, Y \\a\\t g:i") }}
+                </time>
+                <div class="entry">
+                {% set body = post.body|split("\n") %}
+                {% for paragraph in body %}
+                <p>{{ paragraph }}</p>
+                {% endfor %}
+                <p><a class="link" href="/blogs/{{ post.slug }}/edit">Edit Entry</a></p>
+                </div>
+            </article>
         </div>
-      </article>
     </div>
-  </div>
 </section>
 <section class="entry-comments">
-  <div class="container">
-    <h2>Comments</h2>
-    {% for comment in comments %}
-    <div class="comment">
-      <strong>{{ comment.name }}</strong>
-       <time datetime="{{ comment.date }}">{{ comment.date |date("F j, Y \\a\\t g:i") }} </time>
-      <p>{{ comment.body }}</p>
-    </div>
-    {% endfor %}
-    <div class="new-comment">
-      <form>
-        <label for="name"> Name</label>
-        <input type="text" name="name" id="name"><br>
-        <label for="comment">Comment</label>
-        <textarea rows="5" name="comment" id="comment"></textarea>
-        <input type="hidden" name="post" value="{{ post.id }}" />
-        <input type="submit" value="Post Comment" class="button">
-      </form>
-    </div>
+    <div class="container">
+        <h2>Comments</h2>
+        {% for comment in comments %}
+        <div class="comment">
+            <strong>{{ comment.name }}</strong>
+            <time datetime="{{ comment.date }}">
+            {{ comment.date |date("F j, Y \\a\\t g:i") }} 
+            </time>
+            <p>{{ comment.body }}</p>
+        </div>
+        {% endfor %}
+        <div class="new-comment">
+            <form action="/blogs/{{ post.slug }}" method="post">
+                <label for="name"> Name</label>
+                <input type="text" name="name" id="name" value="{{ comment.name }}" ><br>
+                <label for="comment">Comment</label>
+                <textarea rows="5" name="comment" id="comment">{{ comment.body }}</textarea>
+                <input type="hidden" name="post" value="{{ post.id }}" />
+                <input type="submit" value="Post Comment" class="button">
+                {% for key, value in csrf  %}
+                <input type="hidden" name="{{ key }}" value="{{ value }}" />
+                {% endfor %}
+            </form>
+        </div>
 {% endblock %}

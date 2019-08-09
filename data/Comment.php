@@ -25,17 +25,17 @@ class Comment
     /**
      * Constructor
      * @param string $name The comments author
-     * @param string $slug optional The post's title in slug format
-     * @param string $body optional The post's body
-     * @param string $date optional Date the post was made
-     * @param int $id the post's database id   * 
+     * @param string $body The comment
+     * @param string $post_id The post related to the comment
+     * @param int $id the comment's database id   * 
+     * @param string $date optional Date the comment was made
      */
-    public function __construct($id, $name, $body, $project_id, $date = null)
+    public function __construct($name, $body, $post_id, $id = null, $date = null)
     {
         $this->id = $id;
         $this->name = $name;
         $this->body = $body;
-        $this->project_id = $project_id;
+        $this->post_id = $post_id;
 
         if (empty($date)) {
             $this->date = date("Y-m-d H:i:s");
@@ -108,14 +108,40 @@ class Comment
         // create a Comment object for each entry and store in comments array
         foreach ($results->fetchAll() as $comment) {
             $comments[] = new Comment(
-                $comment['id'],
                 $comment['name'],
                 $comment['body'],
                 $comment['post_id'],
+                $comment['id'],
                 $comment['date']
             );
         }
 
         return $comments;
+    }
+
+    /**
+     * Saves a comment to a database
+     * @param PDO $db an object representing the database connection
+     * @param Comment $comment The comment to save
+     * @return bool if successfully saved
+     */
+    public static function saveComment(PDO $db, Comment $comment)
+    {
+        $sql = 'INSERT INTO comments (name, body, post_id, date)'
+            .  'VALUES(?, ?, ?, ?)';
+
+
+        try {
+            $results = $db->prepare($sql);
+            $results->bindValue(1, $comment->getName(), PDO::PARAM_STR);
+            $results->bindValue(2, $comment->getBody(), PDO::PARAM_STR);
+            $results->bindValue(3, $comment->getPostId(), PDO::PARAM_STR);
+            $results->bindValue(4, $comment->getDate(), PDO::PARAM_STR);
+            $results->execute();
+            return true;
+        } catch (Exception $ex) {
+            echo $ex;
+            return false;
+        }
     }
 }
