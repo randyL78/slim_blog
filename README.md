@@ -20,6 +20,6 @@ From the command line, if you have composer installed globally run the command `
 
 ## Extra Credit
 
-- [ ] Add tags to blog entries, which enables the ability to categorize. A blog entry can exist with no tags, or have multiple tags.
+- [X] Add tags to blog entries, which enables the ability to categorize. A blog entry can exist with no tags, or have multiple tags.
 - [X] Add the ability to delete a blog entry.
 - [X] Route blog entries to sear engine friendly post slugs (post title) instead of ID.

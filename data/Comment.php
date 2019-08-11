@@ -2,12 +2,18 @@
 
 /**
  * An object containing information about a single comment
- ** Because of the simplicity of this object/table relationship,
- ** this class follows the Active Record Patter. Had it been a 
- ** more complex relationship, the Data Mapper Pattern would have
- ** been chose.
+ * * Because of the simplicity of this object/table relationship,
+ * * this class follows the Active Record Patter. Had it been a
+ * * more complex relationship, the Data Mapper Pattern would have
+ * * been chose.
+ *
  * @author Randy D. Layne
  */
+
+namespace SlimBlog;
+
+use PDO;
+
 class Comment
 {
     // -----------------------------------------------------------
@@ -24,11 +30,12 @@ class Comment
     // -----------------------------------------------------------
     /**
      * Constructor
-     * @param string $name The comments author
-     * @param string $body The comment
+     *
+     * @param string $name    The comments author
+     * @param string $body    The comment
      * @param string $post_id The post related to the comment
-     * @param int $id the comment's database id   * 
-     * @param string $date optional Date the comment was made
+     * @param int    $id      the comment's database id   *
+     * @param string $date    optional Date the comment was made
      */
     public function __construct($name, $body, $post_id, $id = null, $date = null)
     {
@@ -84,10 +91,11 @@ class Comment
         return $this->post_id;
     }
 
-    /** 
+    /**
      * Get the comments related to a post
-     * @param PDO $db an object representing the database connection
-     * @param int $id The id of the post
+     *
+     * @param  PDO $db an object representing the database connection
+     * @param  int $id The id of the post
      * @return mixed array containg the comments
      */
     public static function getComments(PDO $db, int $id)
@@ -121,8 +129,9 @@ class Comment
 
     /**
      * Saves a comment to a database
-     * @param PDO $db an object representing the database connection
-     * @param Comment $comment The comment to save
+     *
+     * @param  PDO     $db      an object representing the database connection
+     * @param  Comment $comment The comment to save
      * @return bool if successfully saved
      */
     public static function saveComment(PDO $db, Comment $comment)

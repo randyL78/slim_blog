@@ -30,7 +30,9 @@
         "phpunit/phpunit": ">=5.0"
     },
     "autoload": {
-        "Data\\": "data/"
+        "psr-4": {
+            "SlimBlog\\": "data/"
+        }
     },
     "autoload-dev": {
         "psr-4": {

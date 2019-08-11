@@ -2,7 +2,9 @@
 return [
     'settings' => [
         'displayErrorDetails' => true, // set to false in production
-        'addContentLengthHeader' => false, // Allow the web server to send the content-length header
+
+        // Allow the web server to send the content-length header
+        'addContentLengthHeader' => false,
 
         // Twig view settings
         'view' => [
@@ -13,7 +15,8 @@ return [
         // Monolog settings
         'logger' => [
             'name' => 'slim-app',
-            'path' => isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/logs/app.log',
+            'path' => isset($_ENV['docker']) ? 'php://stdout' : __DIR__
+                . '/logs/app.log',
             'level' => \Monolog\Logger::DEBUG,
         ],
 

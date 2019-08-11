@@ -2,12 +2,17 @@
 
 /**
  * An object containing information about a single blog
- ** Because of the simplicity of this object/table relationship,
- ** this class follows the Active Record Patter. Had it been a 
- ** more complex relationship, the Data Mapper Pattern would have
- ** been chose.
+ * * Because of the simplicity of this object/table relationship,
+ * * this class follows the Active Record Patter. Had it been a
+ * * more complex relationship, the Data Mapper Pattern would have
+ * * been chose.
+ *
  * @author Randy Layne
  */
+
+namespace SlimBlog;
+
+use PDO;
 
 class Blog
 {
@@ -27,11 +32,12 @@ class Blog
     // -----------------------------------------------------------
     /**
      * Constructor
+     *
      * @param string $title The post's title
-     * @param string $slug optional The post's title in slug format
-     * @param string $body optional The post's body
-     * @param string $date optional Date the post was made
-     * @param int $id the post's database id   * 
+     * @param string $slug  optional The post's title in slug format
+     * @param string $body  optional The post's body
+     * @param string $date  optional Date the post was made
+     * @param int    $id    the post's database id   *
      */
     public function __construct($title, $slug = null, $body = null, $date = null, $id = null)
     {
@@ -112,8 +118,9 @@ class Blog
 
     /**
      * Delete a post
-     * @param PDO $db an object representing the database connection
-     * @param string $slug title of post in slug form
+     *
+     * @param  PDO    $db   an object representing the database connection
+     * @param  string $slug title of post in slug form
      * @return bool successfully deleted
      */
     public static function deleteBlogPost(PDO $db, $slug)
@@ -132,10 +139,11 @@ class Blog
     }
 
     /**
-     * Get all posts from the posts table. 
+     * Get all posts from the posts table.
      * Limit the columns to the title, date, and slug for easy
      * list displaying.
-     * @param PDO $db an object representing the database connection
+     *
+     * @param  PDO $db an object representing the database connection
      * @return mixed array containing the posts
      */
     public static function getBlogPosts(PDO $db)
@@ -170,8 +178,9 @@ class Blog
 
     /**
      * Get the details of a single post
-     * @param PDO $db an object representing the database connection
-     * @param string $slug the title of a post in slug form
+     *
+     * @param  PDO    $db   an object representing the database connection
+     * @param  string $slug the title of a post in slug form
      * @return mixed array containing the details of the post
      */
     public static function getBlogPost(PDO $db, $slug)
@@ -195,8 +204,9 @@ class Blog
 
     /**
      * Save or update a blog post to the database
-     * @param PDO $db an object representing the database connection
-     * @param Blog $blog the blog post to save
+     *
+     * @param  PDO  $db   an object representing the database connection
+     * @param  Blog $blog the blog post to save
      * @return bool if the post successfully saved
      */
     public static function saveBlogPost(PDO $db, Blog $blog, $old_slug = null)
@@ -230,8 +240,9 @@ class Blog
 
     /**
      * Gets the tags from the database for a post
-     * @param PDO $db an object representing the database connection
-     * @param string $id of a post
+     *
+     * @param  PDO    $db an object representing the database connection
+     * @param  string $id of a post
      * @return array of tags
      */
     public static function getBlogTags(PDO $db, $id)
@@ -243,7 +254,6 @@ class Blog
                 WHERE post_id = ?
                 ORDER BY tags.name';
         try {
-
             $results = $db->prepare($sql);
             $results->bindValue(1, $id, PDO::PARAM_INT);
             $results->execute();
@@ -256,9 +266,10 @@ class Blog
 
     /**
      * saves a collection of tags associated with a post
-     * @param PDO $db an object representing the database connection
-     * @param string $id of a post
-     * @param array $tags a collection of tags
+     *
+     * @param PDO    $db   an object representing the database connection
+     * @param string $id   of a post
+     * @param array  $tags a collection of tags
      */
     public static function saveBlogTags(PDO $db, $blog_id, $tags)
     {
@@ -290,7 +301,8 @@ class Blog
 
     /**
      * Gets all available tags
-     * @param PDO $db an object representing the database connection
+     *
+     * @param  PDO $db an object representing the database connection
      * @return array of tags
      */
     public static function getAllTags(PDO $db)
@@ -309,15 +321,21 @@ class Blog
 
     /**
      * Turn a string into a slug
-     * @param string $str string to turn into slug
+     *
+     * @param  string $str string to turn into slug
      * @return string the slug
      */
     public static function slugThis($str)
     {
-        return strtolower(trim(preg_replace(
-            '/[^A-Za-z0-9-]+/',
-            '-',
-            $str
-        ), '-'));
+        return strtolower(
+            trim(
+                preg_replace(
+                    '/[^A-Za-z0-9-]+/',
+                    '-',
+                    $str
+                ),
+                '-'
+            )
+        );
     }
 }

@@ -6,5 +6,5 @@ use Slim\App;
 
 // connect to the Slim application
 return function (App $app) {
-  $app->add(new Database());
+    $app->add(new Database());
 };

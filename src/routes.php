@@ -1,27 +1,30 @@
 <?php
 
 /**
- * @file 
  * Routing for the SlimBlog app using the Slim Framework
- * @author Randy Layne
+ *
+ * @author Randy Layne <randylayn78@gmail.com>
  */
 
 use Slim\App;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use function PHPSTORM_META\map;
 
 // load the Model classes
-require_once __DIR__ . '/../data/Comment.php';
-require_once __DIR__ . '/../data/Blog.php';
-
+use SlimBlog\Comment;
+use SlimBlog\Blog;
 
 return function (App $app) {
     $container = $app->getContainer();
 
-    // * home route 
+    // * home route
     $app->get(
-        '/', function (Request $request, Response $response, array $args) use ($container) {
+        '/',
+        function (
+            Request $request,
+            Response $response,
+            array $args
+        ) use ($container) {
 
             // get all posts
             $args['posts'] = Blog::getBlogPosts($this->db);
@@ -30,8 +33,8 @@ return function (App $app) {
             $nameKey = $this->csrf->getTokenNameKey();
             $valueKey = $this->csrf->getTokenValueKey();
             $args['csrf'] = [
-            $nameKey => $request->getAttribute($nameKey),
-            $valueKey => $request->getAttribute($valueKey)
+                $nameKey => $request->getAttribute($nameKey),
+                $valueKey => $request->getAttribute($valueKey)
             ];
 
             // Render the home page
@@ -41,7 +44,12 @@ return function (App $app) {
 
     // * delete post route
     $app->post(
-        '/blogs/{slug}/delete', function (Request $request, Response $response, array $args) use ($container) {
+        '/blogs/{slug}/delete',
+        function (
+            Request $request,
+            Response $response,
+            array $args
+        ) use ($container) {
 
             Blog::deleteBlogPost($this->db, $args['slug']);
 
@@ -53,7 +61,13 @@ return function (App $app) {
     // * new route
     // * ensure this route is checked before details route
     $app->map(
-        ['GET', 'POST'], '/blogs/new', function (Request $request, Response $response, array $args) use ($container) {
+        ['GET', 'POST'],
+        '/blogs/new',
+        function (
+            Request $request,
+            Response $response,
+            array $args
+        ) use ($container) {
 
             if ($request->getMethod() == 'POST') {
                 $args = array_merge($request->getParsedBody());
@@ -65,11 +79,13 @@ return function (App $app) {
                 );
 
                 if (!empty($args['post_title']) && !empty($args['body'])) {
-
                     Blog::saveBlogPost($this->db, $blog);
 
                     // get the id of the Blog that was just saved
-                    $blog_id = Blog::getBlogPost($this->db, $blog->getSlug())->getId();
+                    $blog_id = Blog::getBlogPost(
+                        $this->db,
+                        $blog->getSlug()
+                    )->getId();
 
                     // save selected tags to database
                     Blog::saveBlogTags($this->db, $blog_id, $args['tags']);
@@ -89,8 +105,8 @@ return function (App $app) {
             $nameKey = $this->csrf->getTokenNameKey();
             $valueKey = $this->csrf->getTokenValueKey();
             $args['csrf'] = [
-            $nameKey => $request->getAttribute($nameKey),
-            $valueKey => $request->getAttribute($valueKey)
+                $nameKey => $request->getAttribute($nameKey),
+                $valueKey => $request->getAttribute($valueKey)
             ];
 
             // get available tags
@@ -103,7 +119,12 @@ return function (App $app) {
 
     // * blog details route
     $app->get(
-        '/blogs/{slug}', function (Request $request, Response $response, array $args) use ($container) {
+        '/blogs/{slug}',
+        function (
+            Request $request,
+            Response $response,
+            array $args
+        ) use ($container) {
 
             // get a specific post
             $args['post'] = Blog::getBlogPost($this->db, $args['slug']);
@@ -119,8 +140,8 @@ return function (App $app) {
             $nameKey = $this->csrf->getTokenNameKey();
             $valueKey = $this->csrf->getTokenValueKey();
             $args['csrf'] = [
-            $nameKey => $request->getAttribute($nameKey),
-            $valueKey => $request->getAttribute($valueKey)
+                $nameKey => $request->getAttribute($nameKey),
+                $valueKey => $request->getAttribute($valueKey)
             ];
 
             // render detail page
@@ -128,9 +149,14 @@ return function (App $app) {
         }
     );
 
-    // * post a comment 
+    // * post a comment
     $app->post(
-        '/blogs/{slug}', function (Request $request, Response $response, array $args) use ($container) {
+        '/blogs/{slug}',
+        function (
+            Request $request,
+            Response $response,
+            array $args
+        ) use ($container) {
 
             // save slug before array merge
             $slug = $args['slug'];
@@ -161,8 +187,8 @@ return function (App $app) {
             $nameKey = $this->csrf->getTokenNameKey();
             $valueKey = $this->csrf->getTokenValueKey();
             $args['csrf'] = [
-            $nameKey => $request->getAttribute($nameKey),
-            $valueKey => $request->getAttribute($valueKey)
+                $nameKey => $request->getAttribute($nameKey),
+                $valueKey => $request->getAttribute($valueKey)
             ];
 
             // render detail page
@@ -172,12 +198,17 @@ return function (App $app) {
 
     // * update blog route
     $app->map(
-        ['GET', 'POST'], '/blogs/{slug}/edit', function (Request $request, Response $response, array $args) use ($container) {
+        ['GET', 'POST'],
+        '/blogs/{slug}/edit',
+        function (
+            Request $request,
+            Response $response,
+            array $args
+        ) use ($container) {
 
             $slug = $args['slug'];
 
             if ($request->getMethod() == 'POST') {
-
                 $args = array_merge($request->getParsedBody());
 
                 // create a blog object to store post request data
@@ -188,7 +219,6 @@ return function (App $app) {
                 );
 
                 if (!empty($args['post_title']) && !empty($args['body'])) {
-
                     // save Blog to database
                     Blog::saveBlogPost($this->db, $blog, $slug);
 
@@ -211,8 +241,8 @@ return function (App $app) {
             $nameKey = $this->csrf->getTokenNameKey();
             $valueKey = $this->csrf->getTokenValueKey();
             $args['csrf'] = [
-            $nameKey => $request->getAttribute($nameKey),
-            $valueKey => $request->getAttribute($valueKey)
+                $nameKey => $request->getAttribute($nameKey),
+                $valueKey => $request->getAttribute($valueKey)
             ];
 
             $args['action'] = "/blogs/$slug/edit";
