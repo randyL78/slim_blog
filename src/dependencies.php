@@ -13,9 +13,11 @@ return function (App $app) {
     // Register twig view component on container
     $container['view'] = function ($c) {
         $settings = $c->get('settings')['view'];
-        $view = new \Slim\Views\Twig($settings['template_path'], [
+        $view = new \Slim\Views\Twig(
+            $settings['template_path'], [
             'cache' => $settings['cache']
-        ]);
+            ]
+        );
 
         // Instantiate and add Slim specific extension
         $router = $c->get('router');

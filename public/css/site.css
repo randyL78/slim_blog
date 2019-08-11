@@ -267,9 +267,39 @@ input[type=submit] {
 	margin-right: 5px;
 }
 
+.warning {
+	color: #933;
+	border-color: #933;
+	background-color: #FFF;
+}
 
 
 
+/* ==========================================================================
+   Custom CSS toggle buttons 
+   Author: Randy Layne
+   For more info checkout the codepen: https://codepen.io/randyL78/pen/eqPJjp
+   ========================================================================== */
+.toggle {
+    display: inline-block;
+    margin-right: 5px;
+    cursor: pointer;
+}
+.toggle-field {
+    display: none;
+}
+
+.toggle-text {
+    border: 2px solid #000;
+    border-radius: 4px;
+    padding: 4px;
+    transition: .3s color, .3s background-color ease-in-out;
+}
+
+.toggle-field:checked + .toggle-text {
+    background-color:#000;
+    color: #fff;
+}
 
 
 

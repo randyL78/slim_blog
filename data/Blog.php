@@ -20,6 +20,7 @@ class Blog
     private $date;
     private $body;
     private $slug;
+    private $tags = [];
 
     // -----------------------------------------------------------
     //        methods
@@ -94,6 +95,43 @@ class Blog
     }
 
     /**
+     * @return array a list of tags associted with post
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
+    /**
+     * @param array $tags Single word tags to associate with post
+     */
+    public function setTags($tags)
+    {
+        $this->tags = $tags;
+    }
+
+    /**
+     * Delete a post
+     * @param PDO $db an object representing the database connection
+     * @param string $slug title of post in slug form
+     * @return bool successfully deleted
+     */
+    public static function deleteBlogPost(PDO $db, $slug)
+    {
+        $sql = 'DELETE FROM posts WHERE slug = ?';
+
+        try {
+            $results = $db->prepare($sql);
+            $results->bindValue(1, $slug, PDO::PARAM_STR);
+            $results->execute();
+            return true;
+        } catch (Exception $ex) {
+            echo $ex;
+            return false;
+        }
+    }
+
+    /**
      * Get all posts from the posts table. 
      * Limit the columns to the title, date, and slug for easy
      * list displaying.
@@ -102,7 +140,7 @@ class Blog
      */
     public static function getBlogPosts(PDO $db)
     {
-        $sql = 'SELECT title, date, slug FROM posts';
+        $sql = 'SELECT id, title, date, slug FROM posts';
 
         try {
             $results = $db->query($sql);
@@ -115,13 +153,16 @@ class Blog
 
         // create a Blog object for each entry and store in posts array
         foreach ($results->fetchAll() as $post) {
-            $posts[] = new Blog(
+            $blog = new Blog(
                 $post['title'],
                 $post['slug'],
                 null,
                 $post['date'],
-                null
+                $post['id']
             );
+
+            $blog->tags = self::getBlogTags($db, $blog->id);
+            $posts[] = $blog;
         }
 
         return $posts;
@@ -142,11 +183,14 @@ class Blog
             $results->bindValue(1, $slug, PDO::PARAM_STR);
             $results->execute();
             $post = $results->fetch();
-            return new Blog($post['title'], $post['slug'], $post['body'], $post['date'], $post['id']);
+            $blog = new Blog($post['title'], $post['slug'], $post['body'], $post['date'], $post['id']);
+            $blog->tags = self::getBlogTags($db, $blog->id);
         } catch (Exception $ex) {
             echo $ex;
             return false;
         }
+
+        return $blog;
     }
 
     /**
@@ -166,8 +210,6 @@ class Blog
         }
 
         try {
-
-
             $results = $db->prepare($sql);
             $results->bindValue(1, $blog->getTitle(), PDO::PARAM_STR);
             $results->bindValue(2, $blog->getDate(), PDO::PARAM_STR);
@@ -185,6 +227,85 @@ class Blog
             return false;
         }
     }
+
+    /**
+     * Gets the tags from the database for a post
+     * @param PDO $db an object representing the database connection
+     * @param string $id of a post
+     * @return array of tags
+     */
+    public static function getBlogTags(PDO $db, $id)
+    {
+        $sql = 'SELECT tags.name, tags.tag_id
+                FROM posts_tags
+                LEFT JOIN tags
+                ON posts_tags.tag_id = tags.tag_id
+                WHERE post_id = ?
+                ORDER BY tags.name';
+        try {
+
+            $results = $db->prepare($sql);
+            $results->bindValue(1, $id, PDO::PARAM_INT);
+            $results->execute();
+            return $results->fetchAll();
+        } catch (Exceptoin $ex) {
+            echo $ex->get_message();
+            return false;
+        }
+    }
+
+    /**
+     * saves a collection of tags associated with a post
+     * @param PDO $db an object representing the database connection
+     * @param string $id of a post
+     * @param array $tags a collection of tags
+     */
+    public static function saveBlogTags(PDO $db, $blog_id, $tags)
+    {
+
+        // delete existing saved tags
+        $sql = 'DELETE FROM posts_tags WHERE post_id = ?';
+        try {
+            $results = $db->prepare($sql);
+            $results->bindValue(1, $blog_id, PDO::PARAM_INT);
+            $results->execute();
+        } catch (Exception $ex) {
+            echo $ex->getMessage();
+        }
+
+        // save the new tag selection
+        foreach ($tags as $tag) {
+            $sql = 'INSERT INTO posts_tags (post_id, tag_id) VALUES(?, ?)';
+
+            try {
+                $results = $db->prepare($sql);
+                $results->bindValue(1, $blog_id, PDO::PARAM_INT);
+                $results->bindValue(2, $tag, PDO::PARAM_INT);
+                $results->execute();
+            } catch (Exception $ex) {
+                echo $ex->getMessage();
+            }
+        }
+    }
+
+    /**
+     * Gets all available tags
+     * @param PDO $db an object representing the database connection
+     * @return array of tags
+     */
+    public static function getAllTags(PDO $db)
+    {
+        $sql = 'SELECT * FROM tags ORDER BY name';
+
+        try {
+            $results = $db->query($sql);
+            return $results->fetchAll();
+        } catch (Exceptoin $ex) {
+            echo $ex->get_message();
+            return false;
+        }
+    }
+
 
     /**
      * Turn a string into a slug

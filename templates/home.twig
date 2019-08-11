@@ -2,16 +2,28 @@
 
 {% block content %}
 <div class="entry-list">
-  {# Display each blog #}
-  {% for blog in posts %}
-  <article>
-    <h2><a href="blogs/{{ blog.slug }}">{{ blog.title }}</a></h2>
-    <time datetime="{{blog.date}}">{{ blog.date |date("F j, Y \\a\\t g:i") }} </time>
-  </article>
-  {# if no blogs are found, prompt user to create one #}
-  {% else %}
-  <h2>No Blog Posts Found! <a href="/blogs/new">Let's go create one!</a></h2>
-  {% endfor %}
-  <p><a class="link" href="/blogs/new">New Entry</a></p>
+    {# Display each blog #}
+    {% for blog in posts %}
+    <article>
+        <h2><a href="/blogs/{{ blog.slug }}">{{ blog.title }}</a></h2>
+        <time datetime="{{blog.date}}">{{ blog.date |date("F j, Y \\a\\t g:i") }} </time>
+        <p>
+        {% for tag in blog.tags %}
+        <span>#{{ tag.name }} </span>
+        {% endfor %}        
+        </p>
+        <form action="/blogs/{{ blog.slug }}/delete" method="post" >
+            <input type="hidden" name="slug" value="{{ blog.slug }}" />
+            {% for key, value in csrf  %}
+            <input type="hidden" name="{{ key }}" value="{{ value }}" />
+            {% endfor %}
+            <p><input type="submit" class="warning button" value="Delete Post" /></p>
+        </form>
+    </article>
+    {# if no blogs are found, prompt user to create one #}
+    {% else %}
+    <h2>No Blog Posts Found! <a href="/blogs/new">Let's go create one!</a></h2>
+    {% endfor %}
+    <p><a class="button" href="/blogs/new">New Entry</a></p>
 </div>
 {% endblock %}

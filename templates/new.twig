@@ -2,17 +2,33 @@
 
 {% block content %}
 <div class="new-entry">
-  <h2>{{ title }}</h2>
-  <form method="post" action="{{ action }}">
-    <label for="title"> Title</label>
-    <input type="text" value="{{ post.title }}" name="post_title"><br>
-    <label for="entry">Entry</label>
-    <textarea rows="5" name="body">{{ post.body }}</textarea>
-    <input type="submit" value="Publish Entry" class="button">
-    {% for key, value in csrf  %}
-    <input type="hidden" name="{{ key }}" value="{{ value }}" />
-    {% endfor %}
-    <a href="#" class="button button-secondary">Cancel</a>
-  </form>
+    <h2>{{ title }}</h2>
+        {% if error %}
+        <p class="warning">{{ error }}</p>
+        {% endif %}
+    <form method="post" action="{{ action }}">
+        <label for="title">Title</label>
+        <input type="text" value="{{ post.title }}" name="post_title"><br>
+        <label for="entry">Entry</label>
+        <textarea rows="5" name="body">{{ post.body }}</textarea>
+        <label>Tags (Select All That Apply)</label>
+
+        <p>
+        {% for tag in tags %}
+        <label class="toggle" >
+            <input class="toggle-field"  type="checkbox" name=tags[] value ="{{ tag.tag_id }}" {{ tag.selected }}>
+            <span class="toggle-text" >{{ tag.name }}</span>
+        </label>
+        {% endfor %}
+        </p>
+
+        {% for key, value in csrf  %}
+        <input type="hidden" name="{{ key }}" value="{{ value }}" />
+        {% endfor %}
+
+        <input type="submit" value="Publish Entry" class="button">
+
+        <a href="#" class="button button-secondary">Cancel</a>
+    </form>
 </div>
 {% endblock %}
